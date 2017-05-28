@@ -7,8 +7,9 @@
  * Time: 19.14
  */
 class FDb{
-    private $con;
-    private $_result;
+    protected $con;
+    protected $_result;
+    protected $sql;
 
     public function __construct(){
         global $config;
@@ -28,11 +29,21 @@ class FDb{
         $this->con = null;
     }
 
-    public function query($sql){
-        $this->_result = $this->con->query($sql);
-        if(!$this->_result){    return false;  }
-        else{   return true;    }
+    /**
+     * @param string $codice
+     * @return array
+     */
+    public function search($codice){
+        $this->sql->execute(array($codice));
+        $this->_result = $this->sql->fetchAll();
+        return $this->_result;
     }
 
+    /**
+     * @param array $values
+     */
+    public function query($values){
+        $this->sql->execute($values);
+    }
 
 }
