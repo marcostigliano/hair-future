@@ -6,6 +6,8 @@
  * Date: 26/05/17
  * Time: 21.01
  */
+require_once "EDenaro.php";
+
 class EServizio
 {
     private $codice="";
@@ -18,18 +20,18 @@ class EServizio
      * @return string
      */
     private function generaCodice(){
-        return date("Y").(date("n")+date("i")).(date("j")+date("s")).substr(str_shuffle(strtr($this->getNome()," ", "x")), 0, 4);
+        return str_shuffle(date("Y").(date("n")+date("i")).(date("j")+date("s")).strtoupper(substr(str_shuffle(strtr($this->getNome()," ", "x")), 0, 4)));
     }
 
     /**
-     * Servizio constructor.
+     * EServizio constructor.
      * @param $nome
      * @param $descrizione
-     * @param $prezzo
+     * @param EDenaro $prezzo
      * @param DateInterval $durata
      * @param $codice
      */
-    function __construct($nome, $descrizione, $prezzo,DateInterval $durata, $codice)
+    function __construct($nome, $descrizione, EDenaro $prezzo,DateInterval $durata, $codice)
     {
         $this->nome = $nome;
         $this->descrizione = $descrizione;
@@ -67,7 +69,7 @@ class EServizio
     }
 
     /**
-     * @return mixed
+     * @return EDenaro
      */
     public function getPrezzo()
     {
@@ -99,9 +101,9 @@ class EServizio
     }
 
     /**
-     * @param mixed $prezzo
+     * @param EDenaro $prezzo
      */
-    public function setPrezzo($prezzo)
+    public function setPrezzo(EDenaro $prezzo)
     {
         $this->prezzo = $prezzo;
     }

@@ -103,7 +103,7 @@ class ECategoria
         if ( !is_null($item) ){
             unset($this->listaServizi[array_search($item, $this->listaServizi)]);
             return 0;
-        }else {
+        }else{
             return -1;
         }
     }
