@@ -10,39 +10,60 @@ require_once "EDenaro.php";
 
 class EServizio
 {
+//Attributi e metodi privati.
+
+    /**
+     * @var string
+     */
     private $codice="";
+
+    /**
+     * @var string
+     */
     private $nome="";
+
+    /**
+     * @var string
+     */
     private $descrizione="";
-    private $prezzo;
-    private $durata;
+
+    /**
+     * @var float
+     */
+    private $prezzo=0.0;
+
+    /**
+     * @var int
+     */
+    private $durata=0;
 
     /**
      * @return string
      */
-    private function generaCodice(){
+    private function generaCodice()
+    {
         return str_shuffle(date("Y").(date("n")+date("i")).(date("j")+date("s")).strtoupper(substr(str_shuffle(strtr($this->getNome()," ", "x")), 0, 4)));
     }
 
+//Metodi pubblici.
+
     /**
-     * EServizio constructor.
      * @param $nome
      * @param $descrizione
-     * @param EDenaro $prezzo
-     * @param DateInterval $durata
-     * @param $codice
+     * @param $prezzo
+     * @param $durata
      */
-    function __construct($nome, $descrizione, EDenaro $prezzo,DateInterval $durata, $codice)
+
+    function creaNuovo($nome, $descrizione, $prezzo, $durata)
     {
         $this->nome = $nome;
         $this->descrizione = $descrizione;
         $this->prezzo = $prezzo;
         $this->durata = $durata;
-        if ($codice != NULL){
-            $this->codice = $codice;
-        }else{
-            $this->codice = $this->generaCodice();
-        }
+        $this->codice = $this->generaCodice();
     }
+
+//Tutti i GET.
 
     /**
      * @return string
@@ -69,20 +90,22 @@ class EServizio
     }
 
     /**
-     * @return EDenaro
+     * @return int
+     */
+    public function getDurata()
+    {
+        return $this->durata;
+    }
+
+    /**
+     * @return float
      */
     public function getPrezzo()
     {
         return $this->prezzo;
     }
 
-    /**
-     * @return DateInterval
-     */
-    public function getDurata()
-    {
-        return $this->durata;
-    }
+//Tutti i SET.
 
     /**
      * @param string $nome
@@ -101,17 +124,17 @@ class EServizio
     }
 
     /**
-     * @param EDenaro $prezzo
+     * @param $prezzo
      */
-    public function setPrezzo(EDenaro $prezzo)
+    public function setPrezzo($prezzo)
     {
         $this->prezzo = $prezzo;
     }
 
     /**
-     * @param DateInterval $durata
+     * @param $durata
      */
-    public function setDurata(DateInterval $durata)
+    public function setDurata( $durata)
     {
         $this->durata = $durata;
     }

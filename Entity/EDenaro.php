@@ -8,9 +8,21 @@
  */
 class EDenaro
 {
+    /**
+     * @var string
+     */
     private $valuta="";
+
+    /**
+     * @var float
+     */
     private $valore=0.0;
 
+    /**
+     * EDenaro constructor.
+     * @param $valore
+     * @param $valuta
+     */
     function __construct($valore, $valuta)
     {
         $this->valuta=$valuta;

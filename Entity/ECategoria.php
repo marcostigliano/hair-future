@@ -10,13 +10,26 @@ require_once "EServizio.php";
 
 class ECategoria
 {
-    //Attributi e classi private
+    //Attributi e metodi privati.
 
+    /**
+     * @var string
+     */
     private $nome="";
+
+    /**
+     * @var string
+     */
     private $descrizione="";
+
+    /**
+     * @var array
+     */
     private $listaServizi=array();
 
     /**
+     * Riceve in input una stringa e restituisce il servizio trovato.
+     * La formattazione della stringa non è case-sensitive.
      * @param $nomeServizio
      * @return mixed|null
      */
@@ -29,19 +42,20 @@ class ECategoria
         return NULL;
     }
 
+    //Metodi pubblici.
+
     /**
-     * ECategoria constructor.
      * @param $nome
      * @param $descrizione
      */
 
-    //costruttore e classi pubbliche
-
-    function __construct($nome, $descrizione)
+    function CreaNuova($nome, $descrizione)
     {
         $this->nome=$nome;
         $this->descrizione=$descrizione;
     }
+
+//Tutti i GET.
 
     /**
      * @return string
@@ -58,6 +72,8 @@ class ECategoria
     {
         return $this->descrizione;
     }
+
+//Tutti i SET.
 
     /**
      * @param string $nome
@@ -96,7 +112,7 @@ class ECategoria
 
     /**
      * @param $nomeServizio
-     * @return int (Success=0, Fail=-1)
+     * @return int (Successo=0, Fallimento=-1)
      */
     public function eliminaServizio($nomeServizio){
         $item = $this->ricercaServizio($nomeServizio);
