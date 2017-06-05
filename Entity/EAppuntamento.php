@@ -47,9 +47,10 @@ class EAppuntamento{
         $this->ora = $load['ora'];
         $this->durata = $load['durata'];
         $this->costo = $load['costo'];
-        $this->utente = $load['utente'];
+        $this->utente = new ECliente();
+        $this->utente->loadByID($load['utente']);
         $service = new EServizio();
-        foreach (explode(',', $load['listaServizi']) as $servizio) {
+        foreach (explode('|', $load['listaServizi']) as $servizio) {
             $this->listaServizi = $service->loadByID($servizio);
         }
         return $this;
@@ -60,7 +61,8 @@ class EAppuntamento{
      * @return int
      */
     public function sceltaServizi($values){
-        $this->utente = $values[0];
+        $this->utente = new ECliente();
+        $this->utente->loadByID($values[0]);
         $service = new EServizio();
         foreach ($values[1] as $servizio){
             $this->listaServizi = $service->loadByID($servizio);
@@ -73,13 +75,13 @@ class EAppuntamento{
     /**
      * @return array
      */
-    private function prepare(){
+    private function __toArray(){
         $load[0] = $this->data;
         $load[1] = $this->ora;
         $load[2] = $this->durata;
         $load[3] = $this->costo;
-        $load[4] = $this->utente;
-        $load[5] = implode(',', $this->listaServizi['codice']);
+        $load[4] = $this->utente->getEmail();
+        $load[5] = implode('|', $this->listaServizi['codice']);
         return $load;
     }
 
@@ -90,7 +92,7 @@ class EAppuntamento{
         $this->data = $data;
         $this->ora = $ora;
         $db = new FAppuntamento();
-        return $db->insert($this->prepare());
+        return $db->insert($this->__toArray());
     }
 
     /**
@@ -99,7 +101,7 @@ class EAppuntamento{
     public function updateAppuntamento($data, $ora){
         $this->data = $data;
         $this->ora = $ora;
-        $load = $this->prepare();
+        $load = $this->__toArray();
         $load[6] = $this->codice;
         $db = new FAppuntamento();
         return $db->update($load);
