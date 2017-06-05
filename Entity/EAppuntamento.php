@@ -27,69 +27,90 @@ class EAppuntamento{
      * @AssociationMultiplicity 0..*
      * @AssociationKind Aggregation
      */
-    private $listaServizi = array();
+    private $listaServizi;
 
     /**
      * EAppuntamento constructor.
      */
     public function __construct(){
-
+        $this->durata = 0;
+        $this->costo = 0;
     }
 
     /**
-     * @param string $codice
+     * @param array $load
+     * @return EAppuntamento
      */
-    public function loadByCodice($codice){
-        $db = new FAppuntamento();
-        $load = $db->search($codice);
-        $this->codice = $load[0]['codice'];
-        $this->data = $load[0]['data'];
-        $this->ora = $load[0]['ora'];
-        $this->durata = $load[0]['durata'];
-        $this->costo = $load[0]['costo'];
-        $this->utente = $load[0]['utente'];
-        $this->listaServizi = explode(',', $load[0]['listaServizi']);
+    public function loadByValori($load){
+        $this->codice = $load['codice'];
+        $this->data = $load['data'];
+        $this->ora = $load['ora'];
+        $this->durata = $load['durata'];
+        $this->costo = $load['costo'];
+        $this->utente = $load['utente'];
+        $service = new EServizio();
+        foreach (explode(',', $load['listaServizi']) as $servizio) {
+            $this->listaServizi = $service->loadByID($servizio);
+        }
+        return $this;
+    }
+
+    /**
+     * @param array $values
+     * @return int
+     */
+    public function sceltaServizi($values){
+        $this->utente = $values[0];
+        $service = new EServizio();
+        foreach ($values[1] as $servizio){
+            $this->listaServizi = $service->loadByID($servizio);
+            $this->durata += $service->getDurata();
+            $this->costo += $service->getPrezzo();
+        }
+        return $this->durata;
     }
 
     /**
      * @return array
      */
     private function prepare(){
-        $load[0] = $this->codice;
-        $load[1] = $this->data;
-        $load[2] = $this->ora;
-        $load[3] = $this->durata;
-        $load[4] = $this->costo;
-        $load[5] = $this->utente;
-        $load[6] = implode(',', $this->listaServizi);
+        $load[0] = $this->data;
+        $load[1] = $this->ora;
+        $load[2] = $this->durata;
+        $load[3] = $this->costo;
+        $load[4] = $this->utente;
+        $load[5] = implode(',', $this->listaServizi['codice']);
         return $load;
     }
 
     /**
      *
      */
-    public function aggiungiAppuntamento(){
-        $load = $this->prepare();
+    public function addAppuntamento($data, $ora){
+        $this->data = $data;
+        $this->ora = $ora;
         $db = new FAppuntamento();
-        $db->insert($load);
+        return $db->insert($this->prepare());
     }
 
     /**
      *
      */
-    public function modificaAppuntamento(){
+    public function updateAppuntamento($data, $ora){
+        $this->data = $data;
+        $this->ora = $ora;
         $load = $this->prepare();
-        $load[7] = $this->codice;
+        $load[6] = $this->codice;
         $db = new FAppuntamento();
-        $db->update($load);
+        return $db->update($load);
     }
 
     /**
      *
      */
-    public function eliminaAppuntamento(){
+    public function deleteAppuntamento(){
         $db = new FAppuntamento();
-        $db->delete($this->codice);
+        return $db->delete($this->codice);
     }
 
     /**
