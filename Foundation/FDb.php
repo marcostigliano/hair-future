@@ -33,8 +33,8 @@ class FDb{
      * @param string $codice
      * @return array
      */
-    public function search($codice){
-        $this->sql->execute(array($codice));
+    public function search($values){
+        $this->sql->execute($values);
         $this->_result = $this->sql->fetchAll();
         return $this->_result;
     }

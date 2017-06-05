@@ -16,12 +16,12 @@ class FAppuntamento extends FDb{
      * @param string $codice
      * @return array
      */
-    public function search($codice)
+    public function search($id)
     {
         $this->sql = $this->con->prepare("SELECT *
                       FROM Appuntamento
                       WHERE codice=?;");
-        return parent::search($codice);
+        return parent::search(array($id));
     }
 
     /**
@@ -29,8 +29,8 @@ class FAppuntamento extends FDb{
      */
     public function insert($values)
     {
-        $this->sql = $this->con->prepare("INSERT INTO Appuntamento(codice, data, ora, durata, costo, utente, listaServizi)
-                      VALUES (?,?,?,?,?,?,?)");
+        $this->sql = $this->con->prepare("INSERT INTO Appuntamento(data, ora, durata, costo, utente, listaServizi)
+                      VALUES (?,?,?,?,?,?)");
         parent::query($values);
     }
 
@@ -39,8 +39,7 @@ class FAppuntamento extends FDb{
      */
     public function update($values){
         $this->sql = $this->con->prepare("UPDATE Appuntamento
-                     SET codice = ?,
-                         data = ?,
+                     SET data = ?,
                          ora = ?,
                          durata = ?,
                          costo = ?,
