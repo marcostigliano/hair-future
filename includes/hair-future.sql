@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 26, 2017 at 08:26 
--- Server version: 10.1.21-MariaDB
--- PHP Version: 5.6.30
+-- Creato il: Giu 07, 2017 alle 21:53
+-- Versione del server: 10.1.21-MariaDB
+-- Versione PHP: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Appuntamento`
+-- Struttura della tabella `Appuntamento`
 --
 
 CREATE TABLE `Appuntamento` (
@@ -37,19 +37,7 @@ CREATE TABLE `Appuntamento` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `Utente`
---
-
-CREATE TABLE `Utente` (
- `nome` char(20) NOT NULL,
- `cognome` char(20) NOT NULL,
- `recapito` int(10) NOT NULL,
- `email` char(20) NOT NULL,
- `password` char(20) NOT NULL,
- `tipo` char(20) NOT NULL);
-
---
--- Dumping data for table `Appuntamento`
+-- Dump dei dati per la tabella `Appuntamento`
 --
 
 INSERT INTO `Appuntamento` (`codice`, `data`, `ora`, `durata`, `costo`, `utente`, `listaServizi`) VALUES
@@ -57,24 +45,92 @@ INSERT INTO `Appuntamento` (`codice`, `data`, `ora`, `durata`, `costo`, `utente`
 (2, '2017-05-09', '11:00:00', 60, 0, 2, '0001,0005'),
 (3, '2017-05-08', '14:00:00', 90, 0, 1, '0001,0003');
 
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `Utente`
+-- Struttura della tabella `Categoria`
+--
+
+CREATE TABLE `Categoria` (
+  `nome` char(40) NOT NULL,
+  `descrizione` char(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `Categoria`
+--
+
+INSERT INTO `Categoria` (`nome`, `descrizione`) VALUES
+('categoria particolare', 'questa è la categoria particolare'),
+('categoria2', 'questa è la categoria2');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Servizio`
+--
+
+CREATE TABLE `Servizio` (
+  `codice` char(40) NOT NULL,
+  `nome` char(20) DEFAULT NULL,
+  `descrizione` char(100) DEFAULT NULL,
+  `prezzo` float NOT NULL DEFAULT '0',
+  `durata` int(20) DEFAULT NULL,
+  `categoria` char(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `Servizio`
+--
+
+INSERT INTO `Servizio` (`codice`, `nome`, `descrizione`, `prezzo`, `durata`, `categoria`) VALUES
+('U13456153BJBJB1365', 'Servizio1', 'ciao questa è una descrizione di prova', 10, 30, 'categoria particolare'),
+('U1345DESD1BJB41365', 'Servizio2', 'ciao questa è un\' altra descrizione', 15, 30, 'categoria2');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Utente`
+--
+
+CREATE TABLE `Utente` (
+  `nome` char(20) NOT NULL,
+  `cognome` char(20) NOT NULL,
+  `recapito` int(10) NOT NULL,
+  `email` char(20) NOT NULL,
+  `password` char(20) NOT NULL,
+  `tipo` char(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `Utente`
 --
 
 INSERT INTO `Utente` (`nome`, `cognome`, `recapito`, `email`, `password`, `tipo`) VALUES
-('Carlo', 'Attardi', '3896666666', 'example1@hotmail.it', 'password1', 'parrucchiere' ),
-('Marco', 'Stigliano', '3896666667', 'example2@hotmail.it', 'password2', 'parrucchiere'),
-('Giuseppe Pio', 'Carlone', '3896666668', 'example3@hotmail.it', 'password3', 'parrucchiere');
+('Carlo', 'Attardi', 2147483647, 'example1@hotmail.it', 'password1', 'parrucchiere'),
+('Marco', 'Stigliano', 2147483647, 'example2@hotmail.it', 'password2', 'parrucchiere'),
+('Giuseppe Pio', 'Carlone', 2147483647, 'example3@hotmail.it', 'password3', 'parrucchiere');
 
 --
--- Indexes for dumped tables
+-- Indici per le tabelle scaricate
 --
 
 --
--- Indexes for table `Appuntamento`
+-- Indici per le tabelle `Appuntamento`
 --
 ALTER TABLE `Appuntamento`
+  ADD PRIMARY KEY (`codice`);
+
+--
+-- Indici per le tabelle `Categoria`
+--
+ALTER TABLE `Categoria`
+  ADD PRIMARY KEY (`nome`);
+
+--
+-- Indici per le tabelle `Servizio`
+--
+ALTER TABLE `Servizio`
   ADD PRIMARY KEY (`codice`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
