@@ -22,5 +22,16 @@ class ECatalogoAppuntamenti
         }
     }
 
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $result = '';
+        foreach ($this->catalogo as $appuntamento){
+            $result += print($appuntamento) . ".<br>";
+        }
+        return $result;
+    }
 
 }

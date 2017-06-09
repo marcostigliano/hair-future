@@ -125,6 +125,12 @@ class EAppuntamento{
      */
     public function getDurata(){    return $this->durata;  }
 
+    public function __toString()
+    {
+        $string = "Appuntamento del: " . $this->data . ' alle ' . $this->ora .
+            ' prenotato da ' . $this->utente->getEmail() . ".";
+        return $string;
+    }
 
 }
 ?>

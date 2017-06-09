@@ -16,12 +16,12 @@ class FAppuntamento extends FDb{
      * @param string $codice
      * @return array
      */
-    public function search($id)
+    public function search($values)
     {
         $this->sql = $this->con->prepare("SELECT *
                       FROM Appuntamento
-                      WHERE codice=?;");
-        return parent::search(array($id));
+                      WHERE data>?;");
+        return parent::search(array($values));
     }
 
     /**
