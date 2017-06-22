@@ -19,6 +19,10 @@ function __autoload($class_name) {
         case 'C':
             require_once ('Controller/'.$class_name.'.php');
             break;
+        case 'S':
+            require_once ('Entity/Support'.$class_name.'.php');
+
+            break;
         case 'U':
             require_once ('Foundation/Utility/'.$class_name.'.php');
     }
