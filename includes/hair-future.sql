@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
+-- version 4.7.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Giu 07, 2017 alle 21:53
+-- Creato il: Giu 21, 2017 alle 17:33
 -- Versione del server: 10.1.21-MariaDB
 -- Versione PHP: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -41,9 +43,9 @@ CREATE TABLE `Appuntamento` (
 --
 
 INSERT INTO `Appuntamento` (`codice`, `data`, `ora`, `durata`, `costo`, `utente`, `listaServizi`) VALUES
-(1, '2017-05-08', '09:00:00', 120, 0, 1, '0001,0002,0005'),
-(2, '2017-05-09', '11:00:00', 60, 0, 2, '0001,0005'),
-(3, '2017-05-08', '14:00:00', 90, 0, 1, '0001,0003');
+  (1, '2017-05-08', '09:00:00', 120, 0, 1, '0001,0002,0005'),
+  (2, '2017-05-09', '11:00:00', 60, 0, 2, '0001,0005'),
+  (3, '2017-05-08', '14:00:00', 90, 0, 1, '0001,0003');
 
 -- --------------------------------------------------------
 
@@ -61,8 +63,8 @@ CREATE TABLE `Categoria` (
 --
 
 INSERT INTO `Categoria` (`nome`, `descrizione`) VALUES
-('categoria particolare', 'questa è la categoria particolare'),
-('categoria2', 'questa è la categoria2');
+  ('categoria particolare', 'questa è la categoria particolare'),
+  ('categoria2', 'questa è la categoria2');
 
 -- --------------------------------------------------------
 
@@ -71,8 +73,8 @@ INSERT INTO `Categoria` (`nome`, `descrizione`) VALUES
 --
 
 CREATE TABLE `Servizio` (
-  `codice` char(40) NOT NULL,
-  `nome` char(20) DEFAULT NULL,
+  `codice` int(11) NOT NULL,
+  `nome` char(20) NOT NULL,
   `descrizione` char(100) DEFAULT NULL,
   `prezzo` float NOT NULL DEFAULT '0',
   `durata` int(20) DEFAULT NULL,
@@ -84,8 +86,7 @@ CREATE TABLE `Servizio` (
 --
 
 INSERT INTO `Servizio` (`codice`, `nome`, `descrizione`, `prezzo`, `durata`, `categoria`) VALUES
-('U13456153BJBJB1365', 'Servizio1', 'ciao questa è una descrizione di prova', 10, 30, 'categoria particolare'),
-('U1345DESD1BJB41365', 'Servizio2', 'ciao questa è un\' altra descrizione', 15, 30, 'categoria2');
+  (0, 'Servizio1', 'ciao questa è una descrizione di prova', 10, 30, 'categoria particolare');
 
 -- --------------------------------------------------------
 
@@ -107,9 +108,9 @@ CREATE TABLE `Utente` (
 --
 
 INSERT INTO `Utente` (`nome`, `cognome`, `recapito`, `email`, `password`, `tipo`) VALUES
-('Carlo', 'Attardi', 2147483647, 'example1@hotmail.it', 'password1', 'parrucchiere'),
-('Marco', 'Stigliano', 2147483647, 'example2@hotmail.it', 'password2', 'parrucchiere'),
-('Giuseppe Pio', 'Carlone', 2147483647, 'example3@hotmail.it', 'password3', 'parrucchiere');
+  ('Carlo', 'Attardi', 2147483647, 'example1@hotmail.it', 'password1', 'parrucchiere'),
+  ('Marco', 'Stigliano', 2147483647, 'example2@hotmail.it', 'password2', 'parrucchiere'),
+  ('Giuseppe Pio', 'Carlone', 2147483647, 'example3@hotmail.it', 'password3', 'parrucchiere');
 
 --
 -- Indici per le tabelle scaricate
@@ -131,7 +132,18 @@ ALTER TABLE `Categoria`
 -- Indici per le tabelle `Servizio`
 --
 ALTER TABLE `Servizio`
-  ADD PRIMARY KEY (`codice`);
+  ADD PRIMARY KEY (`codice`),
+  ADD UNIQUE KEY `nome_prezzo_unique` (`nome`,`prezzo`);
+
+--
+-- AUTO_INCREMENT per le tabelle scaricate
+--
+
+--
+-- AUTO_INCREMENT per la tabella `Servizio`
+--
+ALTER TABLE `Servizio`
+  MODIFY `codice` int(11) NOT NULL AUTO_INCREMENT;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
