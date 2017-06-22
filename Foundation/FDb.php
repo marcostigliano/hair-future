@@ -30,12 +30,24 @@ class FDb{
     }
 
     /**
-     * @param string $codice
-     * @return array
+     * @param $id
+     * @return array associativo corrispondente alla tupla cercata dove le chiavi corrispondono
+     *                  ai nomi degli attributi della tabella nel db in cui è contenuta
+     */
+    public function searchById($id){
+        $this->sql->execute($id);
+        $this->_result = $this->sql->fetch(PDO::FETCH_ASSOC); //mi mette in un array i risultati della query
+        return $this->_result;
+    }
+
+    /**
+     * @param $values
+     * @return array  di array associativi corrispondenti alle tuple cercate dove le chiavi corrispondono
+     *                  ai nomi degli attributi della tabella nel db in cui è contenuta
      */
     public function search($values){
         $this->sql->execute($values);
-        $this->_result = $this->sql->fetchAll();
+        $this->_result = $this->sql->fetchAll(PDO::FETCH_ASSOC); //mi mette in un array i risultati della query
         return $this->_result;
     }
 
