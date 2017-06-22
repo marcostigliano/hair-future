@@ -6,7 +6,6 @@
  * Date: 26/05/17
  * Time: 21.01
  */
-require_once "EDenaro.php";
 
 class EServizio
 {
@@ -45,6 +44,11 @@ class EServizio
         return str_shuffle(date("Y").(date("n")+date("i")).(date("j")+date("s")).strtoupper(substr(str_shuffle(strtr($this->getNome()," ", "x")), 0, 4)));
     }
 
+    private function updateAttributi()
+    {
+        $Caronte = new FServizio();
+        $Caronte->updateAttributi($this->nome, $this->descrizione, $this->prezzo, $this->durata, $this->codice);
+    }
 //Metodi pubblici.
 
     /**
@@ -52,15 +56,28 @@ class EServizio
      * @param $descrizione
      * @param $prezzo
      * @param $durata
+     * @param $nomeCategoria
      */
 
-    function creaNuovo($nome, $descrizione, $prezzo, $durata)
+    public function creaNuovo($nome, $descrizione, $prezzo, $durata, $nomeCategoria)
     {
-        $this->nome = $nome;
-        $this->descrizione = $descrizione;
-        $this->prezzo = $prezzo;
-        $this->durata = $durata;
-        $this->codice = $this->generaCodice();
+        $Caronte = new FServizio();
+        $Caronte->insert($nome, $descrizione, $prezzo,
+                $durata, $nomeCategoria);
+        $risultati = $Caronte->searchByNomePrezzo($nome, $prezzo);
+        $this->loadByID($risultati);
+    }
+
+    /**
+     * @param $risultati
+     */
+    public function loadByID($risultati)
+    {
+        $this->codice = $risultati['codice'];
+        $this->nome = $risultati['nome'];
+        $this->descrizione = $risultati['descrizione'];
+        $this->prezzo = $risultati['prezzo'];
+        $this->durata = $risultati['durata'];
     }
 
 //Tutti i GET.
@@ -113,6 +130,7 @@ class EServizio
     public function setNome($nome)
     {
         $this->nome = $nome;
+        $this->updateAttributi();
     }
 
     /**
@@ -121,6 +139,7 @@ class EServizio
     public function setDescrizione($descrizione)
     {
         $this->descrizione = $descrizione;
+        $this->updateAttributi();
     }
 
     /**
@@ -129,14 +148,21 @@ class EServizio
     public function setPrezzo($prezzo)
     {
         $this->prezzo = $prezzo;
+        $this->updateAttributi();
     }
 
     /**
      * @param $durata
      */
-    public function setDurata( $durata)
+    public function setDurata($durata)
     {
         $this->durata = $durata;
+        $this->updateAttributi();
     }
 
+    public function rimuoviDefinitivamente()
+    {
+        $Caronte = new FServizio();
+        $Caronte->delete($this->codice);
+    }
 }

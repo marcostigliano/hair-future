@@ -33,13 +33,44 @@ class ECategoria
      * @param $nomeServizio
      * @return mixed|null
      */
-    private function ricercaServizio($nomeServizio){
+    private function ricercaServizio($nomeServizio, $prezzoServizio){
         foreach ($this->listaServizi as $item){
-            if (strtolower($item->getNome())==strtolower($nomeServizio)){
+            if ((strtolower($item->getNome()) == strtolower($nomeServizio))
+                &&
+                ($item->getPrezzo() == $prezzoServizio))
+            {
                 return $item;
             }
         }
         return NULL;
+    }
+
+    private function ricercaServizioByCodice($id)
+    {
+        foreach ($this->listaServizi as $item){
+            if ($item->getCodice() == $id)
+            {
+                return $item;
+            }
+        }
+        return NULL;
+    }
+
+    private function update($vecchioNome)
+    {
+        $Caronte = new FCategoria();
+        $Caronte->update($this->nome, $this->descrizione, $vecchioNome);
+    }
+
+    private function loadServizi()
+    {
+        $Caronte = new FServizio();
+        $risultati = $Caronte->searchByCategoria($this->nome);
+        foreach ($risultati as $item){
+            $Servizio = new EServizio();
+            $Servizio->loadByID($item);
+            $this->listaServizi[] = $Servizio;
+        }
     }
 
     //Metodi pubblici.
@@ -49,10 +80,19 @@ class ECategoria
      * @param $descrizione
      */
 
-    function CreaNuova($nome, $descrizione)
+    public function creaNuova($nome, $descrizione)
     {
-        $this->nome=$nome;
-        $this->descrizione=$descrizione;
+        $Caronte = new FCategoria();
+        $Caronte->insert($nome, $descrizione);
+        $risultati = $Caronte->searchByNome($nome);
+        $this->loadByID($risultati);
+    }
+
+    public function loadByID($risultati)
+    {
+        $this->nome = $risultati["nome"];
+        $this->descrizione = $risultati["descrizione"];
+        $this->loadServizi();
     }
 
 //Tutti i GET.
@@ -80,7 +120,11 @@ class ECategoria
      */
     public function setNome($nome)
     {
+        $Caronte = new FServizio();
+        $Caronte->updateCategoria($nome, $this->nome);
+        $vecchioNome = $this->nome;
         $this->nome = $nome;
+        $this->update($vecchioNome);
     }
 
     /**
@@ -89,23 +133,27 @@ class ECategoria
     public function setDescrizione($descrizione)
     {
         $this->descrizione = $descrizione;
+        $this->update($this->nome);
     }
-
     /**
      * @param EServizio $servizio
      */
-    public function aggiungiServizio(EServizio $servizio){
-        $this->listaServizi[] = $servizio;
+    public function aggiungiNuovoServizio($nome, $descrizione, $prezzo, $durata)
+    {
+        $Servizio = new EServizio();
+        $Servizio->creaNuovo($nome, $descrizione, $prezzo, $durata, $this->nome);
+        $this->listaServizi[] = clone $Servizio;
     }
 
     /**
      * @param $nomeServizio
      * @return EServizio|null
      */
-    public function ottieniServizio($nomeServizio){
-        $item = $this->ricercaServizio($nomeServizio);
+    public function &ottieniServizio($nomeServizio, $prezzoServizio)
+    {
+        $item = $this->ricercaServizio($nomeServizio, $prezzoServizio);
         if ( !is_null($item) )
-            return new EServizio($item->getNome(), $item->getDescrizione(), $item->getPrezzo(), $item->getDurata(), $item->getCodice());
+            return $item;
         else
             return NULL;
     }
@@ -114,13 +162,27 @@ class ECategoria
      * @param $nomeServizio
      * @return int (Successo=0, Fallimento=-1)
      */
-    public function eliminaServizio($nomeServizio){
-        $item = $this->ricercaServizio($nomeServizio);
+    public function eliminaServizio($nomeServizio, $prezzoServizio)
+    {
+        $item = $this->ricercaServizio($nomeServizio, $prezzoServizio);
         if ( !is_null($item) ){
-            unset($this->listaServizi[array_search($item, $this->listaServizi)]);
+            $daEliminare = $this->listaServizi[array_search($item, $this->listaServizi)];
+            $daEliminare->rimuoviDefinitivamente();
+            unset($daEliminare);
             return 0;
         }else{
             return -1;
         }
+    }
+
+    public function rimuoviDefinitivamente()
+    {
+        foreach ($this->listaServizi as $servizio)
+        {
+            $this->eliminaServizio($servizio->getNome(), $servizio->getPrezzo());
+        }
+
+        $Caronte = new FCategoria();
+        $Caronte->delete($this->nome);
     }
 }
