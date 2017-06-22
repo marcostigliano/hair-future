@@ -11,6 +11,9 @@ class FDb{
     protected $_result;
     protected $sql;
 
+    /**
+     * FDb constructor.
+     */
     public function __construct(){
         global $config;
         try {
@@ -30,7 +33,18 @@ class FDb{
     }
 
     /**
-     * @param $id
+     * @return array se la query è ben posta
+     *         null se è mal posta
+     */
+    public function searchAll()
+    {
+        $this->sql->execute();
+        $this->_result = $this->sql->fetchAll(PDO::FETCH_ASSOC);
+        return $this->_result;
+    }
+
+    /**
+     * @array $id
      * @return array associativo corrispondente alla tupla cercata dove le chiavi corrispondono
      *                  ai nomi degli attributi della tabella nel db in cui è contenuta
      */
@@ -41,7 +55,7 @@ class FDb{
     }
 
     /**
-     * @param $values
+     * @array $values
      * @return array  di array associativi corrispondenti alle tuple cercate dove le chiavi corrispondono
      *                  ai nomi degli attributi della tabella nel db in cui è contenuta
      */
