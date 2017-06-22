@@ -30,5 +30,13 @@ class FUtente extends FDb
         parent::query($values);
     }
 
+    public function searchById($email)
+    {
+        $this->sql = $this->con->prepare("SELECT *
+                      FROM Utente
+                      WHERE email=?;");
+        $result= parent::searchById(array($email));
+        return $result;
+    }
 
 }
