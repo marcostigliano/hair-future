@@ -158,6 +158,16 @@ class ECategoria
             return NULL;
     }
 
+
+    public function &ottieniServizioByCodice($id)
+    {
+        $item = $this->ricercaServizioByCodice($id);
+        if ( !is_null($item) )
+            return $item;
+        else
+            return NULL;
+    }
+
     /**
      * @param $nomeServizio
      * @return int (Successo=0, Fallimento=-1)

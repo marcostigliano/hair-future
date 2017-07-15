@@ -128,18 +128,44 @@ class ECatalogoServizi
 
     /**
      * @param $nome
-     * @return SCategoriaUpdater: successo|null: fallimento
+     * @return SCategoriaUpdater: successo, null: fallimento
      */
     public function ottieniCategoriaUpdater($nome)
     {
         return new SCategoriaUpdater($this->ricercaCategoria($nome));
     }
 
+    /**
+     * @param $nome
+     * @param $prezzo
+     * @return EServizio|null
+     */
     public function ottieniServizio($nome, $prezzo)
     {
         foreach ($this->listaCategorie as $item)
         {
             $servizio = $item->ottieniServizio($nome, $prezzo);
+            if ($servizio!=null)
+            {
+                $copia = new EServizio();
+                $copia->loadByID(array('codice'=>$servizio->getCodice(), 'nome'=>$servizio->getNome(),
+                    'descrizione'=>$servizio->getDescrizione(), 'prezzo'=>$servizio->getPrezzo(),
+                    'durata'=>$servizio->getDurata()));
+                return $copia;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param $id
+     * @return EServizio|null
+     */
+    public function ottieniServizioByCodice($id)
+    {
+        foreach ($this->listaCategorie as $item)
+        {
+            $servizio = $item->ottieniServizioByCodice($id);
             if ($servizio!=null)
             {
                 $copia = new EServizio();
