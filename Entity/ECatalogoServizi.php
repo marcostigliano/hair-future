@@ -177,4 +177,12 @@ class ECatalogoServizi
         }
         return null;
     }
+
+    public function __toString()
+    {
+        $categorie = "";
+        foreach ($this->listaCategorie as $item)
+            $categorie = $categorie.$item->__toString();
+        return "Contenuto del Catalogo Servizi: ".$categorie;
+    }
 }

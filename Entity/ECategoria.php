@@ -195,4 +195,12 @@ class ECategoria
         $Caronte = new FCategoria();
         $Caronte->delete($this->nome);
     }
+
+    public function __toString()
+    {
+        $servizi="";
+        foreach ($this->listaServizi as $item)
+            $servizi=$servizi."    ".$item->__toString();
+        return "Nome categoria: ".$this->nome."\nDescrizione: ".$this->descrizione."\nServizi contenuti:\n".$servizi."\n";
+    }
 }

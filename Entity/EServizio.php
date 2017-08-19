@@ -36,13 +36,6 @@ class EServizio
      */
     private $durata=0;
 
-    /**
-     * @return string
-     */
-    private function generaCodice()
-    {
-        return str_shuffle(date("Y").(date("n")+date("i")).(date("j")+date("s")).strtoupper(substr(str_shuffle(strtr($this->getNome()," ", "x")), 0, 4)));
-    }
 
     private function updateAttributi()
     {
@@ -164,5 +157,10 @@ class EServizio
     {
         $Caronte = new FServizio();
         $Caronte->delete($this->codice);
+    }
+
+    public function __toString()
+    {
+        return "Nome servizio: ".$this->nome.", Codice: ".$this->codice.", Descrizione  ".$this->descrizione.", Prezzo: ".$this->prezzo.", Durata: ".$this->durata."\n";
     }
 }
