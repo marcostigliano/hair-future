@@ -23,6 +23,31 @@ class ECatalogoAppuntamenti
     }
 
     /**
+     * @param string $utente
+     * @return array
+     */
+    public function searchAppuntamentoByUtente($utente){
+        $result = array();
+        foreach ($this->catalogo as $appuntamento){
+            if($appuntamento->getUtente() == $utente)
+                $result[] = $appuntamento;
+        }
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function searchAppuntamentoOdierno(){
+        $result = array();
+        foreach ($this->catalogo as $appuntamento) {
+            if($appuntamento->getData() == date('Y-m-d'))
+                $result[] = $appuntamento;
+        }
+        return $result;
+    }
+
+    /**
      * @return string
      */
     public function __toString()

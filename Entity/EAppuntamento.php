@@ -23,7 +23,7 @@ class EAppuntamento{
      */
     private $utente;
     /**
-     * @AssociationType Entity.EServizio
+     * @AssociationType Entity.ECatalogoServizi
      * @AssociationMultiplicity 0..*
      * @AssociationKind Aggregation
      */
@@ -40,6 +40,7 @@ class EAppuntamento{
     /**
      * @param array $load
      * @return EAppuntamento
+     * metodo che riceve un array che permette l'inizializzazione di un appuntamento
      */
     public function loadByValori($load){
         $this->codice = $load['codice'];
@@ -49,9 +50,9 @@ class EAppuntamento{
         $this->costo = $load['costo'];
         $this->utente = new ECliente();
         $this->utente->loadByID($load['utente']);
-        $service = new EServizio();
+        $service = new ECatalogoServizi();
         foreach (explode('|', $load['listaServizi']) as $servizio) {
-            $this->listaServizi = $service->loadByID($servizio);
+            $this->listaServizi = $service->ottieniServizioByCodice($servizio);
         }
         return $this;
     }
@@ -59,21 +60,26 @@ class EAppuntamento{
     /**
      * @param array $values
      * @return int
+     * metodo che riceve una stringa che rappresenta l'utente (email) e una lista di codici che rappresentano
+     *  servizi e prepara la creazione di un nuovo appuntamento (o una sua modifica) calcolando durata e prezzo complessivi
      */
-    public function sceltaServizi($values){
+    public function sceltaServizi($utente, $servizi){
         $this->utente = new ECliente();
-        $this->utente->loadByID($values[0]);
-        $service = new EServizio();
-        foreach ($values[1] as $servizio){
-            $this->listaServizi = $service->loadByID($servizio);
-            $this->durata += $service->getDurata();
-            $this->costo += $service->getPrezzo();
+        $this->utente->loadByID($utente);
+        $service = new ECatalogoServizi();
+        foreach ($servizi as $servizio){
+            $temp = $service->ottieniServizioByCodice($servizio);
+            $this->listaServizi[] = $temp;
+            $this->durata += $temp->getDurata();
+            $this->costo += $temp->getPrezzo();
         }
+        var_dump($this->listaServizi);
         return $this->durata;
     }
 
     /**
      * @return array
+     * metodo che prepara un array sulla base degli attributi di un appuntamento
      */
     private function __toArray(){
         $load[0] = $this->data;
@@ -81,12 +87,14 @@ class EAppuntamento{
         $load[2] = $this->durata;
         $load[3] = $this->costo;
         $load[4] = $this->utente->getEmail();
-        $load[5] = implode('|', $this->listaServizi['codice']);
+        foreach ($this->listaServizi as $servizio)
+            $load[5][] = $servizio->getCodice();
+        $load[5] = implode('|', $load[5]);
         return $load;
     }
 
     /**
-     *
+     * metodo che invia una richiesta al livello foundation di aggiungere un nuovo appuntamento
      */
     public function addAppuntamento($data, $ora){
         $this->data = $data;
@@ -96,7 +104,7 @@ class EAppuntamento{
     }
 
     /**
-     *
+     * metodo che invia una richiesta al livello foundation di modificare un appuntamento
      */
     public function updateAppuntamento($data, $ora){
         $this->data = $data;
@@ -108,7 +116,7 @@ class EAppuntamento{
     }
 
     /**
-     *
+     * metodo che invia una richista al livello foundation di eliminare un appuntamento
      */
     public function deleteAppuntamento(){
         $db = new FAppuntamento();
@@ -124,6 +132,8 @@ class EAppuntamento{
      * @return integer
      */
     public function getDurata(){    return $this->durata;  }
+
+    public function getData(){  return $this->data; }
 
     public function __toString()
     {
