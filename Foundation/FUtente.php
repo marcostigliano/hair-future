@@ -39,4 +39,30 @@ class FUtente extends FDb
         return $result;
     }
 
+    public function update($values){
+        $this->sql = $this->con->prepare("UPDATE Utente
+                     SET nome = ?,
+                         cognome = ?,
+                         recapito = ?,
+                         email = ?,
+                         password = ?
+                     WHERE email = ?;");
+        parent::query($values);
+    }
+
+    public function search($email)
+    {
+        $this->sql = $this->con->prepare("SELECT *
+                      FROM Utente
+                      WHERE email=?;");
+        return parent::search(array($email));
+    }
+
+    public function delete($email){
+        $this->sql = $this->con->prepare("DELETE FROM Utente
+                                          WHERE email=?;");
+
+        parent::query(array($email));
+    }
+
 }
