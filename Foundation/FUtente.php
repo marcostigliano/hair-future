@@ -22,12 +22,12 @@ class FUtente extends FDb
      * @param $values
      */
 
-    public function insert($values)
+    public function insert($nome, $cognome, $recapito, $email, $password, $tipo)
     {
         $this->sql =
             $this->con->prepare("INSERT INTO Utente(nome, cognome, recapito, email, password, tipo)
                                  VALUES (?,?,?,?,?,?)");
-        parent::query($values);
+        parent::query(array($nome, $cognome, $recapito, $email, $password, $tipo));
     }
 
     public function searchById($email)
@@ -39,29 +39,21 @@ class FUtente extends FDb
         return $result;
     }
 
-    public function update($values){
-        $this->sql = $this->con->prepare("UPDATE Utente
+    public function update($nome, $cognome, $recapito, $password, $tipo, $email)
+    {
+        $this->sql = $this->con->prepare("UPDATE Servizio
                      SET nome = ?,
                          cognome = ?,
                          recapito = ?,
-                         email = ?,
-                         password = ?
+                         password = ?,
+                         tipo = ?
                      WHERE email = ?;");
-        parent::query($values);
+        parent::query(array($nome, $cognome, $recapito, $password, $tipo, $email));
     }
 
-    public function search($email)
+    public function delete($email)
     {
-        $this->sql = $this->con->prepare("SELECT *
-                      FROM Utente
-                      WHERE email=?;");
-        return parent::search(array($email));
-    }
-
-    public function delete($email){
-        $this->sql = $this->con->prepare("DELETE FROM Utente
-                                          WHERE email=?;");
-
+        $this->sql = $this->con->prepare("DELETE FROM Servizio WHERE email = ?;");
         parent::query(array($email));
     }
 
