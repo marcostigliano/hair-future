@@ -8,14 +8,14 @@
  */
 
 /**
- * Class EDirettore
+ * Class EDipendente
  */
 
-class EDirettore extends EUtente
+class EDipendente extends EUtente
 {
 
     function getTipo()
     {
-        return "Direttore";
+       return "Parrucchiere";
     }
 }

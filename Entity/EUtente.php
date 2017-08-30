@@ -25,6 +25,14 @@ abstract class EUtente
     private $password;
 
 
+
+    private function update()
+    {
+        $Caronte = new FUtente();
+        $Caronte->update($this->nome,$this->cognome,$this->recapito,$this->password,$this->getTipo(),$this->email);
+    }
+
+
     public function __construct() {}
     /**
      * EUtenteLoggato constructor.
@@ -35,111 +43,117 @@ abstract class EUtente
      * @param $password
      */
 
+    public function loadByID($risultati)
+    {
+        $this->nome = $risultati['nome'];
+        $this->cognome = $risultati['cognome'];
+        $this->recapito = $risultati['recapito'];
+        $this->email = $risultati['email'];
+        $this->password = $risultati['password'];
+    }
+
+
     public function addUtente($nome, $cognome, $recapito, $email, $password)
-    {
-        $this->nome = $nome;
-        $this->cognome = $cognome;
-        $this->recapito = $recapito;
-        $this->setEmail($email);
-        $this->password = $password;
-        return $this;
-    }
-
-    public function addUtenteDB($nome, $cognome, $recapito, $email, $password)
-    {
-        $this->addUtente($nome, $cognome, $recapito, $email, $password);
-        $db= new FUtente();
-        $db->insert($this->__toArray());
-        return $this;
-    }
-
-    public function loadByID1($email)
-    {
-        $db= new FUtente();
-        $db=$db->searchById($email);
-        $user=0;
-        if ($db['tipo']='cliente') $user=new ECliente();
-        elseif ($db['tipo']='parrucchiere') $user=new EParrucchiere();
-        elseif ($db['tipo']='direttore') $user=new EDirettore();
-        $user->nome=$db['nome'];
-        $user->cognome=$db['cognome'];
-        $user->recapito=$db['recapito'];
-        $user->email=$db['email'];
-        $user->password=$db['password'];
-        return $user;
-
-    }
-
-    public function updateUtente($nome, $cognome, $recapito, $email, $password)
     {
         $this->nome = $nome;
         $this->cognome = $cognome;
         $this->recapito = $recapito;
         $this->email = $email;
         $this->password = $password;
-        $load = $this->__toArray();
-        $load[4] = $this->email;
-        $db = new FAppuntamento();
-        return $db->update($load);
-    }
-
-    public function loadByID($email)
-    {
         $db= new FUtente();
-        $db=$db->search($email);
-        return $db[0];
+        $db->insert($nome, $cognome, $recapito, $email, $password,$this->getTipo());
     }
 
-
-    public function deleteUtente()
-    {
-        $db = new FUtente();
-        return $db->delete($this->getEmail());
-    }
     /**
      * @return string
      */
 
     public function __toString()
     {
-        return "$this->nome | $this->cognome | $this->recapito | $this->email | $this->password";
+        return "$this->nome | $this->cognome | $this->recapito | $this->email | $this->password | ".$this->getTipo();
     }
 
     /**
-     * @return array
+     * @return mixed
      */
-    public function __toArray()
+    public function getNome()
     {
-        $values=explode(" | ", $this);
-        $values[]=$this->getTipo();
-        return $values;
+        return $this->nome;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCognome()
+    {
+        return $this->cognome;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecapito()
+    {
+        return $this->recapito;
     }
 
     /**
      * @return string
      */
     public function getEmail()
-    { return $this->email; }
+    {
+        return $this->email;
+    }
 
-    // per gestire le particolarità di un'email
-    public function setEmail($email)
-    { $this->email=$email; }
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
 
     abstract function getTipo();
 
-    public function prenotaAppuntamento($utentedaprenotare,$data,$ora)
+    /**
+     * @param mixed $nome
+     */
+    public function setNome($nome)
     {
-        $app=new EAppuntamento();
-
-        if ($this->getTipo()=='Cliente')
-            $utente=$this;
-        else $utente=$this->loadByID($utentedaprenotare);
-        $app->addAppuntamento($data,$ora);
+        $this->nome = $nome;
+        $this->update();
     }
 
-    public function visualizzaServizio($nome, $prezzo)
+    /**
+     * @param mixed $cognome
+     */
+    public function setCognome($cognome)
     {
-        $cs= new ECatalogoServizi();
-        $cs->ottieniServizio($nome, $prezzo);
+        $this->cognome = $cognome;
+        $this->update();
+    }
+
+    /**
+     * @param mixed $recapito
+     */
+    public function setRecapito($recapito)
+    {
+        $this->recapito = $recapito;
+        $this->update();
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        $this->update();
+    }
+
+    public function rimuoviDefinitivamente()
+    {
+        $Caronte = new FUtente();
+        $Caronte->delete($this->email);
     }
 }
