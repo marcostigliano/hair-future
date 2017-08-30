@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Giu 21, 2017 alle 17:33
+-- Creato il: Ago 30, 2017 alle 11:04
 -- Versione del server: 10.1.21-MariaDB
 -- Versione PHP: 5.6.30
 
@@ -43,9 +43,9 @@ CREATE TABLE `Appuntamento` (
 --
 
 INSERT INTO `Appuntamento` (`codice`, `data`, `ora`, `durata`, `costo`, `utente`, `listaServizi`) VALUES
-  (1, '2017-05-08', '09:00:00', 120, 0, 1, '0001,0002,0005'),
-  (2, '2017-05-09', '11:00:00', 60, 0, 2, '0001,0005'),
-  (3, '2017-05-08', '14:00:00', 90, 0, 1, '0001,0003');
+(1, '2017-05-08', '09:00:00', 120, 0, 1, '0001,0002,0005'),
+(2, '2017-05-09', '11:00:00', 60, 0, 2, '0001,0005'),
+(3, '2017-05-08', '14:00:00', 90, 0, 1, '0001,0003');
 
 -- --------------------------------------------------------
 
@@ -63,8 +63,8 @@ CREATE TABLE `Categoria` (
 --
 
 INSERT INTO `Categoria` (`nome`, `descrizione`) VALUES
-  ('categoria particolare', 'questa è la categoria particolare'),
-  ('categoria2', 'questa è la categoria2');
+('categoria particolare', 'questa è la categoria particolare'),
+('categoria2', 'questa è la categoria2');
 
 -- --------------------------------------------------------
 
@@ -86,7 +86,7 @@ CREATE TABLE `Servizio` (
 --
 
 INSERT INTO `Servizio` (`codice`, `nome`, `descrizione`, `prezzo`, `durata`, `categoria`) VALUES
-  (0, 'Servizio1', 'ciao questa è una descrizione di prova', 10, 30, 'categoria particolare');
+(0, 'Servizio1', 'ciao questa è una descrizione di prova', 10, 30, 'categoria particolare');
 
 -- --------------------------------------------------------
 
@@ -108,9 +108,9 @@ CREATE TABLE `Utente` (
 --
 
 INSERT INTO `Utente` (`nome`, `cognome`, `recapito`, `email`, `password`, `tipo`) VALUES
-  ('Carlo', 'Attardi', 2147483647, 'example1@hotmail.it', 'password1', 'parrucchiere'),
-  ('Marco', 'Stigliano', 2147483647, 'example2@hotmail.it', 'password2', 'parrucchiere'),
-  ('Giuseppe Pio', 'Carlone', 2147483647, 'example3@hotmail.it', 'password3', 'parrucchiere');
+('Carlo', 'Attardi', 2147483647, 'example1@hotmail.it', 'password1', 'parrucchiere'),
+('Marco', 'Stigliano', 2147483647, 'example2@hotmail.it', 'password2', 'parrucchiere'),
+('Giuseppe Pio', 'Carlone', 2147483647, 'example3@hotmail.it', 'password3', 'parrucchiere');
 
 --
 -- Indici per le tabelle scaricate
@@ -134,6 +134,12 @@ ALTER TABLE `Categoria`
 ALTER TABLE `Servizio`
   ADD PRIMARY KEY (`codice`),
   ADD UNIQUE KEY `nome_prezzo_unique` (`nome`,`prezzo`);
+
+--
+-- Indici per le tabelle `Utente`
+--
+ALTER TABLE `Utente`
+  ADD PRIMARY KEY (`email`);
 
 --
 -- AUTO_INCREMENT per le tabelle scaricate
