@@ -73,7 +73,6 @@ class EAppuntamento{
             $this->durata += $temp->getDurata();
             $this->costo += $temp->getPrezzo();
         }
-        var_dump($this->listaServizi);
         return $this->durata;
     }
 

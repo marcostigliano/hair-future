@@ -25,6 +25,8 @@ class ECatalogoAppuntamenti
     /**
      * @param string $utente
      * @return array
+     * metodo che riceve una stringa rappresentante l'email di un utente (attributo identificativo)
+     *  e restituisce tutti gli appuntamenti a lui associati
      */
     public function searchAppuntamentoByUtente($utente){
         $result = array();
@@ -37,6 +39,7 @@ class ECatalogoAppuntamenti
 
     /**
      * @return array
+     * metodo che restituisce tutti gli appuntamenti della data corrente
      */
     public function searchAppuntamentoOdierno(){
         $result = array();
@@ -45,6 +48,34 @@ class ECatalogoAppuntamenti
                 $result[] = $appuntamento;
         }
         return $result;
+    }
+
+
+    /**
+     * @param $data
+     * @return array
+     * metodo che riceve una data in formato 'Y-m-d' e restituisce tutti gli appuntamenti associati ad essa associati
+     */
+    public function searchAppuntamentoByData($data){
+        $result = array();
+        foreach ($this->catalogo as $appuntamento){
+            if($appuntamento->getData() == $data)
+                $result[] = $appuntamento;
+        }
+        return $result;
+    }
+
+    /**
+     * @param $codice
+     * @return bool|mixed
+     * metodo che riceve un codice di un appuntamento e lo restituisce, se esiste
+     */
+    public function searchAppuntamentoByCodice($codice){
+        foreach ($this->catalogo as $appuntamento){
+            if($appuntamento->getCodice() == $codice)
+                return $appuntamento;
+        }
+        return false;
     }
 
     /**
