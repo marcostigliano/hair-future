@@ -20,7 +20,7 @@ class FAppuntamento extends FDb{
     {
         $this->sql = $this->con->prepare("SELECT *
                       FROM Appuntamento
-                      WHERE data>?;");
+                      WHERE data >= ?;");
         return parent::search(array($values));
     }
 

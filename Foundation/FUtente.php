@@ -41,7 +41,7 @@ class FUtente extends FDb
 
     public function update($nome, $cognome, $recapito, $password, $tipo, $email)
     {
-        $this->sql = $this->con->prepare("UPDATE Servizio
+        $this->sql = $this->con->prepare("UPDATE Utente
                      SET nome = ?,
                          cognome = ?,
                          recapito = ?,
@@ -53,7 +53,7 @@ class FUtente extends FDb
 
     public function delete($email)
     {
-        $this->sql = $this->con->prepare("DELETE FROM Servizio WHERE email = ?;");
+        $this->sql = $this->con->prepare("DELETE FROM Utente WHERE email = ?;");
         parent::query(array($email));
     }
 
