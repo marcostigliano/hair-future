@@ -6,7 +6,6 @@
  * Date: 26/05/17
  * Time: 21.16
  */
-require_once "EServizio.php";
 
 class ECategoria
 {
@@ -135,6 +134,14 @@ class ECategoria
         $this->descrizione = $descrizione;
         $this->update($this->nome);
     }
+
+    public function modificaAttributi($nome, $descrizione)
+    {
+        $vecchioNome = $this->nome;
+        $this->nome = $nome;
+        $this->descrizione = $descrizione;
+        $this->update($vecchioNome);
+    }
     /**
      * @param EServizio $servizio
      */
@@ -158,8 +165,7 @@ class ECategoria
             return NULL;
     }
 
-
-    public function &ottieniServizioByCodice($id)
+    public function ottieniServizioByCodice($id)
     {
         $item = $this->ricercaServizioByCodice($id);
         if ( !is_null($item) )
@@ -172,9 +178,9 @@ class ECategoria
      * @param $nomeServizio
      * @return int (Successo=0, Fallimento=-1)
      */
-    public function eliminaServizio($nomeServizio, $prezzoServizio)
+    public function eliminaServizio($id)
     {
-        $item = $this->ricercaServizio($nomeServizio, $prezzoServizio);
+        $item = $this->ricercaServizioByCodice($id);
         if ( !is_null($item) ){
             $daEliminare = $this->listaServizi[array_search($item, $this->listaServizi)];
             $daEliminare->rimuoviDefinitivamente();
@@ -189,7 +195,7 @@ class ECategoria
     {
         foreach ($this->listaServizi as $servizio)
         {
-            $this->eliminaServizio($servizio->getNome(), $servizio->getPrezzo());
+            $this->eliminaServizio($servizio->getCodice());
         }
 
         $Caronte = new FCategoria();

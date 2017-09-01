@@ -156,4 +156,28 @@ abstract class EUtente
         $Caronte = new FUtente();
         $Caronte->delete($this->email);
     }
+
+    public function prenotaAppuntamento($email, $listaServizi, $data, $ora)
+    {
+        $catalogo = new ECatalogoAppuntamenti();
+        $catalogo->prenotaAppuntamento($email, $listaServizi, $data, $ora);
+    }
+
+    public function modificaAppuntamento($id, $data, $ora, $email)
+    {
+        $catalogo = new ECatalogoAppuntamenti();
+        $catalogo->modificaAppuntamento($id, $data, $ora, $email);
+    }
+
+    public function cancellaAppuntamento($id, $email)
+    {
+        $catalogo = new ECatalogoAppuntamenti();
+        $catalogo->cancellaAppuntamento($id, $email);
+    }
+
+    public function ottieniListaServizi($email)
+    {
+        $catalogo = new ECatalogoAppuntamenti();
+        return $catalogo->searchAppuntamentoByUtente($email);
+    }
 }

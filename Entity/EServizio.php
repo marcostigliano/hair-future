@@ -153,6 +153,15 @@ class EServizio
         $this->updateAttributi();
     }
 
+    public function modificaAttributi($nome, $descrizione, $prezzo, $durata)
+    {
+        $this->nome = $nome;
+        $this->descrizione = $descrizione;
+        $this->prezzo = $prezzo;
+        $this->durata = $durata;
+        $this->updateAttributi();
+    }
+
     public function rimuoviDefinitivamente()
     {
         $Caronte = new FServizio();

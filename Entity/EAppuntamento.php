@@ -29,13 +29,23 @@ class EAppuntamento{
      */
     private $listaServizi;
 
+    private function calcolaDurataCostoAppuntamento()
+    {
+        $this->durata = 0;
+        $this->costo = 0;
+        foreach ($this->listaServizi as $temp)
+        {
+            $this->durata += $temp->getDurata();
+            $this->costo += $temp->getPrezzo();
+        }
+    }
+
     /**
      * EAppuntamento constructor.
      */
-    public function __construct(){
-        $this->durata = 0;
-        $this->costo = 0;
-    }
+
+    public function __construct()
+    {}
 
     /**
      * @param array $load
@@ -43,16 +53,19 @@ class EAppuntamento{
      * metodo che riceve un array che permette l'inizializzazione di un appuntamento
      */
     public function loadByValori($load){
+        $this->durata = 0;
+        $this->costo = 0;
         $this->codice = $load['codice'];
         $this->data = $load['data'];
         $this->ora = $load['ora'];
-        $this->durata = $load['durata'];
-        $this->costo = $load['costo'];
-        $this->utente = new ECliente();
-        $this->utente->loadByID($load['utente']);
+        $this->utente = EGestoreUtenti::ottieniUtenteByID($load['utente']);
         $service = new ECatalogoServizi();
-        foreach (explode('|', $load['listaServizi']) as $servizio) {
-            $this->listaServizi = $service->ottieniServizioByCodice($servizio);
+        $arrayCodiciServizi = explode('|', $load['listaServizi']);
+        foreach ($arrayCodiciServizi as $servizio) {
+            $temp = $service->ottieniServizioByCodice($servizio);
+            $this->listaServizi[] = $temp;
+            $this->durata += $temp->getDurata();
+            $this->costo += $temp->getPrezzo();
         }
         return $this;
     }
@@ -60,15 +73,15 @@ class EAppuntamento{
     /**
      * @param array $values
      * @return int
-     * metodo che riceve una stringa che rappresenta l'utente (email) e una lista di codici che rappresentano
-     *  servizi e prepara la creazione di un nuovo appuntamento (o una sua modifica) calcolando durata e prezzo complessivi
+     * metodo che riceve una stringa che rappresenta l'utente (email) e una lista di servizi
+     * e prepara la creazione di un nuovo appuntamento (o una sua modifica) calcolando durata e prezzo complessivi
      */
     public function sceltaServizi($utente, $servizi){
-        $this->utente = new ECliente();
-        $this->utente->loadByID($utente);
-        $service = new ECatalogoServizi();
+        $this->utente = EGestoreUtenti::ottieniUtenteByID($utente);
+        $this->durata = 0;
+        $this->costo = 0;
         foreach ($servizi as $servizio){
-            $temp = $service->ottieniServizioByCodice($servizio);
+            $temp = $servizio;
             $this->listaServizi[] = $temp;
             $this->durata += $temp->getDurata();
             $this->costo += $temp->getPrezzo();
@@ -86,6 +99,7 @@ class EAppuntamento{
         $load[2] = $this->durata;
         $load[3] = $this->costo;
         $load[4] = $this->utente->getEmail();
+        $load[5] = array();
         foreach ($this->listaServizi as $servizio)
             $load[5][] = $servizio->getCodice();
         $load[5] = implode('|', $load[5]);
@@ -125,14 +139,57 @@ class EAppuntamento{
     /**
      * @return integer
      */
-    public function getCodice(){    return $this->codice;  }
+    public function getCodice()
+    {
+        return $this->codice;
+    }
 
     /**
      * @return integer
      */
-    public function getDurata(){    return $this->durata;  }
+    public function getDurata()
+    {
+        return $this->durata;
+    }
 
-    public function getData(){  return $this->data; }
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCosto()
+    {
+        return $this->costo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOraInizio()
+    {
+        return $this->ora;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUtente()
+    {
+        return $this->utente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOraFine()
+    {
+        $selectedTime = $this->ora;
+        $endTime = strtotime($selectedTime) + (($this->durata)*60);
+        return date('H:i:s', $endTime);
+    }
 
     public function __toString()
     {

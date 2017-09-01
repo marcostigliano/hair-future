@@ -79,11 +79,11 @@ class ECatalogoServizi
      * @param $prezzo
      * @return 0: successo, -1:fallimento
      */
-    public function rimuoviServizio($nome, $prezzo)
+    public function rimuoviServizio($id)
     {
         foreach ($this->listaCategorie as $item)
         {
-            $controllo = $item->eliminaServizio($nome, $prezzo);
+            $controllo = $item->eliminaServizio($id);
             if ($controllo!=-1)
             {
                 return 0;
@@ -176,6 +176,11 @@ class ECatalogoServizi
             }
         }
         return null;
+    }
+
+    public function ottieniCategoria($nome)
+    {
+        return $this->ricercaCategoria($nome);
     }
 
     public function __toString()

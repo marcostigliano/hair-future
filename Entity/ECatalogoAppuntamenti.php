@@ -15,9 +15,9 @@ class ECatalogoAppuntamenti
      */
     public function __construct(){
         $db = new FAppuntamento();
-        $result = $db->search(date('Y-m-d'));
-        $appuntamento = new EAppuntamento();
+        $result = $db->search("CURRENT_DATE");
         foreach ($result as $row){
+            $appuntamento = new EAppuntamento();
             $this->catalogo[] = $appuntamento->loadByValori($row);
         }
     }
@@ -28,10 +28,12 @@ class ECatalogoAppuntamenti
      * metodo che riceve una stringa rappresentante l'email di un utente (attributo identificativo)
      *  e restituisce tutti gli appuntamenti a lui associati
      */
+
+
     public function searchAppuntamentoByUtente($utente){
         $result = array();
         foreach ($this->catalogo as $appuntamento){
-            if($appuntamento->getUtente() == $utente)
+            if($appuntamento->getUtente()->getEmail() == $utente)
                 $result[] = $appuntamento;
         }
         return $result;
@@ -78,6 +80,7 @@ class ECatalogoAppuntamenti
         return false;
     }
 
+
     /**
      * @return string
      */
@@ -85,9 +88,39 @@ class ECatalogoAppuntamenti
     {
         $result = '';
         foreach ($this->catalogo as $appuntamento){
-            $result += print($appuntamento) . ".<br>";
+            $result = $result. $appuntamento->__toString() . "\n";
         }
         return $result;
+    }
+
+    public function prenotaAppuntamento($email, $listaServizi, $data, $ora)
+    {
+        $appuntamento = new EAppuntamento();
+        $appuntamento->sceltaServizi($email, $listaServizi);
+        $appuntamento->addAppuntamento($data, $ora);
+    }
+
+    public function modificaAppuntamento($id, $data, $ora, $email)
+    {
+        $appuntamenti = $this->searchAppuntamentoByUtente($email);
+        foreach ($appuntamenti as $appuntamento)
+        {
+            if ($appuntamento->getCodice() == $id)
+            {
+                $appuntamento->updateAppuntamento($data, $ora);
+                return 0;
+            }
+        }
+        return -1;
+    }
+
+    public function cancellaAppuntamento($id, $email)
+    {
+        $appuntamenti = $this->searchAppuntamentoByUtente($email);
+        foreach ($appuntamenti as $appuntamento) {
+            if ($appuntamento->getCodice() == $id)
+                $appuntamento->deleteAppuntamento();
+        }
     }
 
 }
