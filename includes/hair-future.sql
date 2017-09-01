@@ -2,10 +2,10 @@
 -- version 4.7.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Creato il: Ago 30, 2017 alle 16:05
--- Versione del server: 10.1.26-MariaDB
--- Versione PHP: 7.1.8
+-- Host: localhost
+-- Creato il: Set 01, 2017 alle 18:10
+-- Versione del server: 10.1.25-MariaDB
+-- Versione PHP: 5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `appuntamento`
+-- Struttura della tabella `Appuntamento`
 --
 
-CREATE TABLE `appuntamento` (
+CREATE TABLE `Appuntamento` (
   `codice` int(4) NOT NULL,
   `data` date NOT NULL,
   `ora` time NOT NULL,
@@ -38,43 +38,24 @@ CREATE TABLE `appuntamento` (
   `listaServizi` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dump dei dati per la tabella `appuntamento`
---
-
-INSERT INTO `appuntamento` (`codice`, `data`, `ora`, `durata`, `costo`, `utente`, `listaServizi`) VALUES
-(4, '2017-08-31', '09:00:00', 120, 30, 'example2@hotmail.it', '0|0'),
-(6, '2017-09-01', '09:00:00', 90, 30, 'example2@hotmail.it', '0|0|0'),
-(7, '2017-09-01', '09:00:00', 90, 30, 'example2@hotmail.it', '0|0|0'),
-(8, '2017-09-01', '09:00:00', 90, 30, 'example2@hotmail.it', '0|0|0'),
-(9, '2017-09-01', '09:00:00', 90, 30, 'example2@hotmail.it', '0|0|0');
-
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `categoria`
+-- Struttura della tabella `Categoria`
 --
 
-CREATE TABLE `categoria` (
+CREATE TABLE `Categoria` (
   `nome` char(40) NOT NULL,
   `descrizione` char(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dump dei dati per la tabella `categoria`
---
-
-INSERT INTO `categoria` (`nome`, `descrizione`) VALUES
-('categoria particolare', 'questa è la categoria particolare'),
-('categoria2', 'questa è la categoria2');
-
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `servizio`
+-- Struttura della tabella `Servizio`
 --
 
-CREATE TABLE `servizio` (
+CREATE TABLE `Servizio` (
   `codice` int(11) NOT NULL,
   `nome` char(20) NOT NULL,
   `descrizione` char(100) DEFAULT NULL,
@@ -83,20 +64,13 @@ CREATE TABLE `servizio` (
   `categoria` char(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dump dei dati per la tabella `servizio`
---
-
-INSERT INTO `servizio` (`codice`, `nome`, `descrizione`, `prezzo`, `durata`, `categoria`) VALUES
-(0, 'Servizio1', 'ciao questa è una descrizione di prova', 10, 30, 'categoria particolare');
-
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `utente`
+-- Struttura della tabella `Utente`
 --
 
-CREATE TABLE `utente` (
+CREATE TABLE `Utente` (
   `nome` varchar(20) NOT NULL,
   `cognome` varchar(20) NOT NULL,
   `recapito` varchar(10) NOT NULL,
@@ -106,42 +80,34 @@ CREATE TABLE `utente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `utente`
---
-
-INSERT INTO `utente` (`nome`, `cognome`, `recapito`, `email`, `password`, `tipo`) VALUES
-('Carlo', 'Attardi', '2147483647', 'example1@hotmail.it', 'password1', 'parrucchiere'),
-('Marco', 'Stigliano', '2147483647', 'example2@hotmail.it', 'password2', 'parrucchiere'),
-('Giuseppe Pio', 'Carlone', '2147483647', 'example3@hotmail.it', 'password3', 'parrucchiere');
-
---
 -- Indici per le tabelle scaricate
 --
 
 --
--- Indici per le tabelle `appuntamento`
+-- Indici per le tabelle `Appuntamento`
 --
-ALTER TABLE `appuntamento`
+ALTER TABLE `Appuntamento`
   ADD PRIMARY KEY (`codice`),
-  ADD KEY `Utente` (`utente`);
+  ADD KEY `utente_key` (`utente`);
 
 --
--- Indici per le tabelle `categoria`
+-- Indici per le tabelle `Categoria`
 --
-ALTER TABLE `categoria`
+ALTER TABLE `Categoria`
   ADD PRIMARY KEY (`nome`);
 
 --
--- Indici per le tabelle `servizio`
+-- Indici per le tabelle `Servizio`
 --
-ALTER TABLE `servizio`
+ALTER TABLE `Servizio`
   ADD PRIMARY KEY (`codice`),
-  ADD UNIQUE KEY `nome_prezzo_unique` (`nome`,`prezzo`);
+  ADD UNIQUE KEY `nome_prezzo_unique` (`nome`,`prezzo`),
+  ADD KEY `categoria` (`categoria`);
 
 --
--- Indici per le tabelle `utente`
+-- Indici per le tabelle `Utente`
 --
-ALTER TABLE `utente`
+ALTER TABLE `Utente`
   ADD PRIMARY KEY (`email`);
 
 --
@@ -149,24 +115,30 @@ ALTER TABLE `utente`
 --
 
 --
--- AUTO_INCREMENT per la tabella `appuntamento`
+-- AUTO_INCREMENT per la tabella `Appuntamento`
 --
-ALTER TABLE `appuntamento`
+ALTER TABLE `Appuntamento`
   MODIFY `codice` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
--- AUTO_INCREMENT per la tabella `servizio`
+-- AUTO_INCREMENT per la tabella `Servizio`
 --
-ALTER TABLE `servizio`
+ALTER TABLE `Servizio`
   MODIFY `codice` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Limiti per le tabelle scaricate
 --
 
 --
--- Limiti per la tabella `appuntamento`
+-- Limiti per la tabella `Appuntamento`
 --
-ALTER TABLE `appuntamento`
-  ADD CONSTRAINT `Utente` FOREIGN KEY (`utente`) REFERENCES `utente` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Appuntamento`
+  ADD CONSTRAINT `utente` FOREIGN KEY (`utente`) REFERENCES `Utente` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limiti per la tabella `Servizio`
+--
+ALTER TABLE `Servizio`
+  ADD CONSTRAINT `categoria` FOREIGN KEY (`categoria`) REFERENCES `Categoria` (`nome`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
