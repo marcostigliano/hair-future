@@ -123,4 +123,40 @@ class ECatalogoAppuntamenti
         }
     }
 
+    /**
+     * @param $data
+     * @param $ora
+     * @param $listaServizi
+     * @return int
+     *
+     * metodo che riceve una data in formato 'Y-m-d', e l'ora in formato 'H:i:s'
+     */
+    public function controllaPossibilitàPrenotazione($data, $ora, $listaServizi)
+    {
+        $startTime = strtotime($data." ".$ora);
+        $durata = 0;
+        foreach ($listaServizi as $servizio)
+        {
+            $durata += $servizio->getDurata();
+        }
+
+        $endTime = $startTime + (($durata)*60);
+        $listaAppuntamenti = $this->searchAppuntamentoByData($data);
+        foreach ($listaAppuntamenti as $appuntamento)
+        {
+            $oraInizioTemp = strtotime($data." ".$appuntamento->getOraInizio());
+            $oraFineTemp = strtotime($data." ".$appuntamento->getOraFine());
+
+            print "".$oraInizioTemp." ".$oraFineTemp."    ".$startTime." ".$endTime."\n";
+
+            if (((($startTime <= $oraInizioTemp) && ($endTime >= $oraFineTemp)) ||
+                (($startTime <= $oraInizioTemp) && (($endTime <= $oraFineTemp) && ($endTime >= $oraInizioTemp))) ||
+                ((($startTime >= $oraInizioTemp) && ($startTime <= $oraFineTemp)) && ($endTime >= $oraFineTemp)) ||
+                (($startTime >= $oraInizioTemp) && ($endTime <= $oraFineTemp))))
+            {
+                return -1;
+            }
+        }
+        return 0;
+    }
 }

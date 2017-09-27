@@ -209,4 +209,12 @@ class ECategoria
             $servizi=$servizi."    ".$item->__toString();
         return "Nome categoria: ".$this->nome."\nDescrizione: ".$this->descrizione."\nServizi contenuti:\n".$servizi."\n";
     }
+
+    /**
+     * @return array
+     */
+    public function getListaServizi()
+    {
+        return $this->listaServizi;
+    }
 }

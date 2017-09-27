@@ -190,4 +190,12 @@ class ECatalogoServizi
             $categorie = $categorie.$item->__toString();
         return "Contenuto del Catalogo Servizi: ".$categorie;
     }
+
+    /**
+     * @return array
+     */
+    public function getListaCategorie()
+    {
+        return $this->listaCategorie;
+    }
 }
